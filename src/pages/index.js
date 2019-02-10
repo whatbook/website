@@ -19,8 +19,10 @@ Desc: Define inital variables
       stageCenterX = stageWidth / 2,
       stageCenterY = stageHeight / 2,
       renderFrom = 0,
+      // renderTimer = 4000,
       renderTimer = 100,
       renderRunning = true,
+      // breakTimer = 1000,
       breakTimer = 100,
       number,
       dots = [],
@@ -252,7 +254,7 @@ Desc: Dot object
     /*
 Desc: Create a certain amount of dots
 */
-    for (var i = 0; i < 640; i++) {
+    for (var i = 0; i < 800; i++) {
       // Create a dot
       var dot = new Dot(
         randomNumber(0, stageWidth),
@@ -317,7 +319,7 @@ Desc: Draw number
       tagCtx.fillStyle = '#24282f'
       tagCtx.textAlign = 'left'
       tagCtx.font = 'bold 88px Lato'
-      tagCtx.fillText(num, Math.random() * 300, Math.random() * 400)
+      tagCtx.fillText(num, Math.random() * tagWidth, Math.random() * tagHeight)
 
       var ctx = document
         .querySelector(`#canvas-tag-${renderFrom}`)
@@ -377,6 +379,10 @@ Desc: Form number
 */
     function formNumber() {
       console.log('dots.length', dots.length)
+      console.log(
+        'numberPixelCoordinates.length',
+        releases[renderFrom].numberPixelCoordinates.length
+      )
       for (
         var i = 0;
         i < releases[renderFrom].numberPixelCoordinates.length;
@@ -430,7 +436,16 @@ Desc: Animate dots
         })
       } else {
         // Tween dot to coordinate to form number
-        const newDot = { ...dot }
+        // const newDot = { ...dot }
+        // dots.push()
+        var newDot = new Dot(
+          randomNumber(0, stageWidth),
+          randomNumber(0, stageHeight),
+          colors[randomNumber(1, colors.length)],
+          0.3
+        )
+
+        // Push to into an array of dots
         dots.push(newDot)
         TweenMax.to(newDot, 1.5 + Math.round(Math.random() * 100) / 100, {
           x: pos.x + numberOffsetX,
@@ -491,6 +506,7 @@ Desc: Get a random number
         <canvas id="canvas-tag-35" />
         <canvas id="canvas-tag-36" />
         <canvas id="canvas-tag-37" />
+        <canvas id="canvas-tag-38" />
         <canvas id="canvas-version" />
         <canvas id="canvas-dots" />
       </div>
