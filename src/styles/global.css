@@ -13,6 +13,6 @@ canvas {
 }
 
 #canvas-number {
-  width: 680px;
-  height: 420px;
+  width: 100%;
+  height: 100%;
 }
