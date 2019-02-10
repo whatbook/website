@@ -18,9 +18,9 @@ Desc: Define inital variables
       stageHeight = window.innerHeight,
       stageCenterX = stageWidth / 2,
       stageCenterY = stageHeight / 2,
-      countdownFrom = 0,
-      countdownTimer = 4000,
-      countdownRunning = true,
+      renderFrom = 0,
+      renderTimer = 4000,
+      renderRunning = true,
       breakTimer = 1000,
       number,
       dots = [],
@@ -254,22 +254,22 @@ Desc: Create a certain amount of dots
     }
 
     /*
-Desc: Countdown
+Desc: render
 */
-    function countdown() {
+    function render() {
       // Send number to be drawn
-      drawTag(releases[countdownFrom].tag.toString())
+      drawTag(releases[renderFrom].tag.toString())
 
-      // When we hit zero stop countdown
-      if (countdownFrom + 1 === releases.length) {
-        countdownRunning = false
-        // Now that countdowns finised show the text Go
+      // When we hit zero stop render
+      if (renderFrom + 1 === releases.length) {
+        renderRunning = false
+        // Now that renders finised show the text Go
       }
 
       // Decrement number down
-      countdownFrom++
+      renderFrom++
     }
-    countdown()
+    render()
 
     /*
 Desc: Redraw loops
@@ -360,10 +360,10 @@ Desc: Form number
       }
 
       // Break number apart
-      if (countdownRunning && countdownFrom + 1 !== releases.length) {
+      if (renderRunning && renderFrom + 1 !== releases.length) {
         setTimeout(function() {
           breakNumber()
-        }, countdownTimer)
+        }, renderTimer)
       }
     }
 
@@ -372,10 +372,10 @@ Desc: Form number
         tweenDots(dots[i], '', 'space')
       }
 
-      if (countdownRunning) {
+      if (renderRunning) {
         // Build next number
         setTimeout(function() {
-          countdown()
+          render()
         }, breakTimer)
       }
     }
