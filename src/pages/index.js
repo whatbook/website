@@ -6,10 +6,10 @@ export default class IndexPage extends Component {
     /*
 Desc: Define inital variables
 */
-    var numberStage,
-      numberStageCtx,
-      numberStageWidth = window.innerWidth,
-      numberStageHeight = window.innerHeight,
+    var tag,
+      tagCtx,
+      tagWidth = window.innerWidth,
+      tagHeight = window.innerHeight,
       numberOffsetX,
       numberOffsetY,
       stage,
@@ -195,12 +195,12 @@ Desc: Define inital variables
 Desc: Init canvases & Number text
 */
     function init() {
-      // Init stage which will have numbers
-      numberStage = document.getElementById('canvas-number')
-      numberStageCtx = numberStage.getContext('2d')
+      // Init stage which will have tags
+      tag = document.getElementById('canvas-tag')
+      tagCtx = tag.getContext('2d')
       // Set the canvas to width and height of the window
-      numberStage.width = numberStageWidth
-      numberStage.height = numberStageHeight
+      tag.width = tagWidth
+      tag.height = tagHeight
 
       // Init Stage which will have dots
       stage = document.getElementById('canvas-dots')
@@ -209,8 +209,8 @@ Desc: Init canvases & Number text
       stage.height = stageHeight
 
       // Create offset so text appears in middle of screen
-      numberOffsetX = (stageWidth - numberStageWidth) / 2
-      numberOffsetY = (stageHeight - numberStageHeight) / 2
+      numberOffsetX = (stageWidth - tagWidth) / 2
+      numberOffsetY = (stageHeight - tagHeight) / 2
     }
 
     init()
@@ -293,27 +293,22 @@ Desc: Draw number
       // Create a number on a seperate canvas
       // Use a seperate canvas thats smaller so we have less data to loop over when using getImagedata()
 
-      //	Clear stage of previous numbers
-      numberStageCtx.clearRect(0, 0, numberStageWidth, numberStageHeight)
+      //	Clear stage of previous tags
+      tagCtx.clearRect(0, 0, tagWidth, tagHeight)
 
-      numberStageCtx.fillStyle = '#24282f'
-      numberStageCtx.textAlign = 'center'
-      numberStageCtx.font = 'bold 88px Lato'
-      numberStageCtx.fillText(num, 600, 400)
+      tagCtx.fillStyle = '#24282f'
+      tagCtx.textAlign = 'center'
+      tagCtx.font = 'bold 88px Lato'
+      tagCtx.fillText(num, 600, 400)
 
-      var ctx = document.getElementById('canvas-number').getContext('2d')
+      var ctx = document.getElementById('canvas-tag').getContext('2d')
 
       // getImageData(x, y, width, height)
       // note: is an exspenisve function, so make sure canvas is small as possible for what you grab
       // Returns 1 Dimensional array of pixel color value chanels
       // Red, blue, green, alpha chanel of single pixel
       // First chanel is red
-      var imageData = ctx.getImageData(
-        0,
-        0,
-        numberStageWidth,
-        numberStageHeight
-      ).data
+      var imageData = ctx.getImageData(0, 0, tagWidth, tagHeight).data
 
       // Clear number coordinated
       numberPixelCoordinates = []
@@ -329,11 +324,11 @@ Desc: Draw number
           // (i / 4 ) and percentage by width of canvas
           // Need to divide i by 4 because it has 4 values and you need its orginal position
           // Then you need to percentage it by the width(600) because each row contains 600 pixels and you need its relative position in that row
-          var x = (i / 4) % numberStageWidth
+          var x = (i / 4) % tagWidth
 
           // (i divide by width) then divide by 4
           // Divide by width(600) first so you get the rows of pixels that make up the canvas. Then divide by 4 to get its postion within the row
-          var y = Math.floor(Math.floor(i / numberStageWidth) / 4)
+          var y = Math.floor(Math.floor(i / tagWidth) / 4)
 
           // If position exists and number is divisble by circle plus a pixel gap then add cordinates to array. So circles do not overlap
           if (
@@ -419,7 +414,8 @@ Desc: Get a random number
   render() {
     return (
       <div>
-        <canvas id="canvas-number" />
+        <canvas id="canvas-tag" />
+        <canvas id="canvas-version" />
         <canvas id="canvas-dots" />
       </div>
     )
