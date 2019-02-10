@@ -8,8 +8,8 @@ Desc: Define inital variables
 */
     var numberStage,
       numberStageCtx,
-      numberStageWidth = 680,
-      numberStageHeight = 420,
+      numberStageWidth = window.innerWidth,
+      numberStageHeight = window.innerHeight,
       numberOffsetX,
       numberOffsetY,
       stage,
@@ -18,9 +18,10 @@ Desc: Define inital variables
       stageHeight = window.innerHeight,
       stageCenterX = stageWidth / 2,
       stageCenterY = stageHeight / 2,
-      countdownFrom = 10,
+      countdownFrom = 0,
       countdownTimer = 2800,
       countdownRunning = true,
+      breakTimer = 1000,
       number,
       dots = [],
       numberPixelCoordinates,
@@ -31,6 +32,7 @@ Desc: Define inital variables
         '255, 211, 218',
         '151, 211, 226',
       ]
+    var releases = ['1.0.0', '2.10.0']
 
     /*
 Desc: Init canvases & Number text
@@ -99,17 +101,17 @@ Desc: Countdown
 */
     function countdown() {
       // Send number to be drawn
-      drawNumber(countdownFrom.toString())
+      drawNumber(releases[countdownFrom].toString())
 
       // When we hit zero stop countdown
-      if (countdownFrom === 0) {
+      if (countdownFrom + 1 === releases.length) {
         countdownRunning = false
         // Now that countdowns finised show the text Go
         drawNumber('2.10.0')
       }
 
       // Decrement number down
-      countdownFrom--
+      countdownFrom++
     }
     countdown()
 
@@ -140,8 +142,8 @@ Desc: Draw number
 
       numberStageCtx.fillStyle = '#24282f'
       numberStageCtx.textAlign = 'center'
-      numberStageCtx.font = 'bold 418px Lato'
-      numberStageCtx.fillText(num, 340, 400)
+      numberStageCtx.font = 'bold 318px Lato'
+      numberStageCtx.fillText(num, 600, 400)
 
       var ctx = document.getElementById('canvas-number').getContext('2d')
 
@@ -202,7 +204,7 @@ Desc: Form number
       }
 
       // Break number apart
-      if (countdownRunning && countdownFrom > 0) {
+      if (countdownRunning && countdownFrom + 1 !== releases.length) {
         setTimeout(function() {
           breakNumber()
         }, countdownTimer)
@@ -218,7 +220,7 @@ Desc: Form number
         // Build next number
         setTimeout(function() {
           countdown()
-        }, countdownTimer)
+        }, breakTimer)
       }
     }
 
