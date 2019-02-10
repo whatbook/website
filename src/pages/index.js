@@ -19,12 +19,11 @@ Desc: Define inital variables
       stageCenterX = stageWidth / 2,
       stageCenterY = stageHeight / 2,
       renderFrom = 0,
-      renderTimer = 4000,
+      renderTimer = 100,
       renderRunning = true,
-      breakTimer = 1000,
+      breakTimer = 100,
       number,
       dots = [],
-      numberPixelCoordinates,
       circleRadius = 2,
       colors = [
         '61, 207, 236',
@@ -253,7 +252,7 @@ Desc: Dot object
     /*
 Desc: Create a certain amount of dots
 */
-    for (var i = 0; i < 2240; i++) {
+    for (var i = 0; i < 640; i++) {
       // Create a dot
       var dot = new Dot(
         randomNumber(0, stageWidth),
@@ -318,7 +317,7 @@ Desc: Draw number
       tagCtx.fillStyle = '#24282f'
       tagCtx.textAlign = 'left'
       tagCtx.font = 'bold 88px Lato'
-      tagCtx.fillText(num, 0, 400)
+      tagCtx.fillText(num, Math.random() * 300, Math.random() * 400)
 
       var ctx = document
         .querySelector(`#canvas-tag-${renderFrom}`)
@@ -332,7 +331,7 @@ Desc: Draw number
       var imageData = ctx.getImageData(0, 0, tagWidth, tagHeight).data
 
       // Clear number coordinated
-      numberPixelCoordinates = []
+      releases[renderFrom].numberPixelCoordinates = []
 
       // i is equal to total image data(eg: 480,000)
       // run while i is greater or equal to 0
@@ -358,7 +357,7 @@ Desc: Draw number
             (y && y % (circleRadius * 2 + 3) == 0)
           ) {
             // Push object to numberPixels array with x and y coordinates
-            numberPixelCoordinates.push({ x: x, y: y })
+            releases[renderFrom].numberPixelCoordinates.push({ x: x, y: y })
           }
         }
       }
@@ -370,27 +369,38 @@ Desc: Draw number
       const tag = releases[renderFrom].tag
       const version = releases[renderFrom].version
 
-      return tag === version ? 2500 : renderTimer
+      return tag === version ? 100 : renderTimer
+      // return tag === version ? 2500 : renderTimer
     }
     /*
 Desc: Form number
 */
     function formNumber() {
-      for (var i = 0; i < numberPixelCoordinates.length; i++) {
+      console.log('dots.length', dots.length)
+      for (
+        var i = 0;
+        i < releases[renderFrom].numberPixelCoordinates.length;
+        i++
+      ) {
         // Loop out as many coordionates as we need & pass dots in to animate
-        tweenDots(dots[i], numberPixelCoordinates[i], '')
+        tweenDots(dots[i], releases[renderFrom].numberPixelCoordinates[i], '')
       }
 
       // Break number apart
       if (renderRunning && renderFrom + 1 !== releases.length) {
         setTimeout(function() {
-          breakNumber()
+          render()
+          // breakTag()
         }, getRenderTimer())
       }
     }
 
-    function breakNumber() {
-      for (var i = 0; i < numberPixelCoordinates.length; i++) {
+    function breakTag() {
+      for (
+        var i = 0;
+        i < releases[renderFrom].numberPixelCoordinates.length;
+        i++
+      ) {
         tweenDots(dots[i], '', 'space')
       }
 
@@ -420,7 +430,9 @@ Desc: Animate dots
         })
       } else {
         // Tween dot to coordinate to form number
-        TweenMax.to(dot, 1.5 + Math.round(Math.random() * 100) / 100, {
+        const newDot = { ...dot }
+        dots.push(newDot)
+        TweenMax.to(newDot, 1.5 + Math.round(Math.random() * 100) / 100, {
           x: pos.x + numberOffsetX,
           y: pos.y + numberOffsetY,
           delay: 0,
