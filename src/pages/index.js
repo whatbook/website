@@ -195,12 +195,7 @@ Desc: Define inital variables
 Desc: Init canvases & Number text
 */
     function init() {
-      // Init stage which will have tags
-      tag = document.getElementById('canvas-tag')
-      tagCtx = tag.getContext('2d')
-      // Set the canvas to width and height of the window
-      tag.width = tagWidth
-      tag.height = tagHeight
+      initTags()
 
       // Init Stage which will have dots
       stage = document.getElementById('canvas-dots')
@@ -214,6 +209,27 @@ Desc: Init canvases & Number text
     }
 
     init()
+
+    function initTags() {
+      function initTag(tagElement) {
+        // Init stage which will have tags
+        // Set the canvas to width and height of the window
+        tagElement.width = tagWidth // May be I can use tag char count to set every release of width here
+        tagElement.height = tagHeight
+      }
+      releases.forEach((release, index) => {
+        const tagElement = createTagElement(index)
+        initTag(document.querySelector(`#canvas-tag-${index}`))
+      })
+      // initTag(document.querySelector(`#canvas-tag-${renderFrom}`))
+    }
+
+    function createTagElement(index) {
+      const canvasElement = document.createElement('canvas')
+      canvasElement.setAttribute('id', `canvas-tag-${index}`)
+      document.querySelector('#canvas-wrap').append(canvasElement)
+      return canvasElement
+    }
 
     /*
 Desc: Dot object
@@ -258,6 +274,9 @@ Desc: render
 */
     function render() {
       // Send number to be drawn
+      tagCtx = document
+        .querySelector(`#canvas-tag-${renderFrom}`)
+        .getContext('2d')
       drawTag(releases[renderFrom].tag.toString())
 
       // When we hit zero stop render
@@ -301,7 +320,9 @@ Desc: Draw number
       tagCtx.font = 'bold 88px Lato'
       tagCtx.fillText(num, 0, 400)
 
-      var ctx = document.getElementById('canvas-tag').getContext('2d')
+      var ctx = document
+        .querySelector(`#canvas-tag-${renderFrom}`)
+        .getContext('2d')
 
       // getImageData(x, y, width, height)
       // note: is an exspenisve function, so make sure canvas is small as possible for what you grab
@@ -419,8 +440,45 @@ Desc: Get a random number
   }
   render() {
     return (
-      <div>
-        <canvas id="canvas-tag" />
+      <div id="canvas-wrap">
+        <canvas id="canvas-tag-0" />
+        <canvas id="canvas-tag-1" />
+        <canvas id="canvas-tag-2" />
+        <canvas id="canvas-tag-3" />
+        <canvas id="canvas-tag-4" />
+        <canvas id="canvas-tag-5" />
+        <canvas id="canvas-tag-6" />
+        <canvas id="canvas-tag-7" />
+        <canvas id="canvas-tag-8" />
+        <canvas id="canvas-tag-9" />
+        <canvas id="canvas-tag-10" />
+        <canvas id="canvas-tag-11" />
+        <canvas id="canvas-tag-12" />
+        <canvas id="canvas-tag-13" />
+        <canvas id="canvas-tag-14" />
+        <canvas id="canvas-tag-15" />
+        <canvas id="canvas-tag-16" />
+        <canvas id="canvas-tag-17" />
+        <canvas id="canvas-tag-18" />
+        <canvas id="canvas-tag-19" />
+        <canvas id="canvas-tag-20" />
+        <canvas id="canvas-tag-21" />
+        <canvas id="canvas-tag-22" />
+        <canvas id="canvas-tag-23" />
+        <canvas id="canvas-tag-24" />
+        <canvas id="canvas-tag-25" />
+        <canvas id="canvas-tag-26" />
+        <canvas id="canvas-tag-27" />
+        <canvas id="canvas-tag-28" />
+        <canvas id="canvas-tag-29" />
+        <canvas id="canvas-tag-30" />
+        <canvas id="canvas-tag-31" />
+        <canvas id="canvas-tag-32" />
+        <canvas id="canvas-tag-33" />
+        <canvas id="canvas-tag-34" />
+        <canvas id="canvas-tag-35" />
+        <canvas id="canvas-tag-36" />
+        <canvas id="canvas-tag-37" />
         <canvas id="canvas-version" />
         <canvas id="canvas-dots" />
       </div>
