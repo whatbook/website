@@ -297,7 +297,7 @@ Desc: Draw number
       tagCtx.clearRect(0, 0, tagWidth, tagHeight)
 
       tagCtx.fillStyle = '#24282f'
-      tagCtx.textAlign = 'center'
+      tagCtx.textAlign = 'left'
       tagCtx.font = 'bold 88px Lato'
       tagCtx.fillText(num, 600, 400)
 
@@ -345,6 +345,12 @@ Desc: Draw number
       formNumber()
     }
 
+    function getRenderTimer() {
+      const tag = releases[renderFrom].tag
+      const version = releases[renderFrom].version
+
+      return tag === version ? 2500 : renderTimer
+    }
     /*
 Desc: Form number
 */
@@ -358,7 +364,7 @@ Desc: Form number
       if (renderRunning && renderFrom + 1 !== releases.length) {
         setTimeout(function() {
           breakNumber()
-        }, renderTimer)
+        }, getRenderTimer())
       }
     }
 
