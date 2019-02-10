@@ -395,8 +395,11 @@ Desc: Form number
       // Break number apart
       if (renderRunning && renderFrom + 1 !== releases.length) {
         setTimeout(function() {
-          render()
-          // breakTag()
+          if (renderFrom % 3 === 0) {
+            breakTag()
+          } else {
+            render()
+          }
         }, getRenderTimer())
       }
     }
