@@ -299,7 +299,7 @@ Desc: Draw number
       tagCtx.fillStyle = '#24282f'
       tagCtx.textAlign = 'left'
       tagCtx.font = 'bold 88px Lato'
-      tagCtx.fillText(num, 600, 400)
+      tagCtx.fillText(num, 0, 400)
 
       var ctx = document.getElementById('canvas-tag').getContext('2d')
 
