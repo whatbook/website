@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { TweenMax, Power2, TimelineLite, Bounce, Sine } from 'gsap/TweenMax'
+import { TweenMax, Power2, TimelineLite, Sine } from 'gsap/TweenMax'
 
 export default class IndexPage extends Component {
   componentDidMount() {
@@ -457,12 +457,12 @@ Desc: Animate dots
 
         // Push to into an array of dots
         dots.push(newDot)
-        TweenMax.to(newDot, 1.5 + Math.round(Math.random() * 100) / 100, {
+        TweenMax.to(newDot, 1 + Math.round(Math.random() * 100) / 100, {
           x: pos.x + numberOffsetX,
           y: pos.y + numberOffsetY,
           delay: 0,
           alpha: 1,
-          ease: Bounce.easeInOut,
+          ease: Power2.easeInOut,
           onComplete: function() {},
         })
       }
