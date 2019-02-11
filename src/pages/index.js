@@ -397,7 +397,7 @@ Desc: Form number
           if (renderFrom % 3 === 0) {
             setTimeout(() => {
               breakTag()
-            }, 1000)
+            }, renderTimer + 500)
           } else {
             render()
           }

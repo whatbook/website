@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:900);
 
-body {
+body,
+html {
   background-color: #24282f;
   margin: 0;
   padding: 0;
