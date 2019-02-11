@@ -45,6 +45,12 @@
       "path": "node_modules/cz-customizable"
     }
   },
+  "standard-version": {
+    "skip": {
+      "commit": true,
+      "tag": true
+    }
+  },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -e $GIT_PARAMS"
