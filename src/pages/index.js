@@ -321,7 +321,11 @@ Desc: Draw number
       tagCtx.fillStyle = '#24282f'
       tagCtx.textAlign = 'left'
       tagCtx.font = 'bold 88px Lato'
-      tagCtx.fillText(num, Math.random() * tagWidth, Math.random() * tagHeight)
+      tagCtx.fillText(
+        num,
+        100,
+        ((tagHeight - 200) / mostTagCount) * ((renderFrom % 3) + 1)
+      )
 
       var ctx = document
         .querySelector(`#canvas-tag-${renderFrom}`)
