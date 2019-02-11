@@ -19,11 +19,12 @@ Desc: Define inital variables
       stageCenterX = stageWidth / 2,
       stageCenterY = stageHeight / 2,
       renderFrom = 0,
-      // renderTimer = 4000,
-      renderTimer = 100,
+      renderTimer = 1000,
+      // renderTimer = 100,
       renderRunning = true,
-      // breakTimer = 1000,
-      breakTimer = 100,
+      breakTimer = 1000,
+      // breakTimer = 100,
+      totalDotsCount = 800,
       number,
       dots = [],
       circleRadius = 2,
@@ -32,7 +33,8 @@ Desc: Define inital variables
         '255, 244, 174',
         '255, 211, 218',
         '151, 211, 226',
-      ]
+      ],
+      mostTagCount = 3
     var releases = [
       {
         tag: '2018-4-26今天我们上线啦！',
@@ -219,7 +221,7 @@ Desc: Init canvases & Number text
         tagElement.height = tagHeight
       }
       releases.forEach((release, index) => {
-        const tagElement = createTagElement(index)
+        // const tagElement = createTagElement(index)
         initTag(document.querySelector(`#canvas-tag-${index}`))
       })
       // initTag(document.querySelector(`#canvas-tag-${renderFrom}`))
@@ -254,7 +256,7 @@ Desc: Dot object
     /*
 Desc: Create a certain amount of dots
 */
-    for (var i = 0; i < 800; i++) {
+    for (var i = 0; i < totalDotsCount; i++) {
       // Create a dot
       var dot = new Dot(
         randomNumber(0, stageWidth),
@@ -371,18 +373,15 @@ Desc: Draw number
       const tag = releases[renderFrom].tag
       const version = releases[renderFrom].version
 
-      return tag === version ? 100 : renderTimer
       // return tag === version ? 2500 : renderTimer
+      return renderTimer // 出现几个就break一次值需要renderTimer即可
     }
     /*
 Desc: Form number
 */
     function formNumber() {
       console.log('dots.length', dots.length)
-      console.log(
-        'numberPixelCoordinates.length',
-        releases[renderFrom].numberPixelCoordinates.length
-      )
+      console.log('numberPixelCoordinates', releases[renderFrom])
       for (
         var i = 0;
         i < releases[renderFrom].numberPixelCoordinates.length;
@@ -396,7 +395,9 @@ Desc: Form number
       if (renderRunning && renderFrom + 1 !== releases.length) {
         setTimeout(function() {
           if (renderFrom % 3 === 0) {
-            breakTag()
+            setTimeout(() => {
+              breakTag()
+            }, 1000)
           } else {
             render()
           }
@@ -405,12 +406,8 @@ Desc: Form number
     }
 
     function breakTag() {
-      for (
-        var i = 0;
-        i < releases[renderFrom].numberPixelCoordinates.length;
-        i++
-      ) {
-        tweenDots(dots[i], '', 'space')
+      for (var i = dots.length - 1; i >= totalDotsCount; i--) {
+        tweenDots(dots[i], '', 'empty')
       }
 
       if (renderRunning) {
@@ -435,6 +432,16 @@ Desc: Animate dots
           ease: Sine.easeOut,
           onComplete: function() {
             tweenDots(dot, '', 'space')
+          },
+        })
+      } else if (type === 'empty') {
+        TweenMax.to(dot, 0.5 + Math.round(Math.random() * 100) / 100, {
+          x: randomNumber(0, stageWidth),
+          y: randomNumber(0, stageHeight),
+          alpha: 0,
+          ease: Sine.easeOut,
+          onComplete: function() {
+            // dots.pop()
           },
         })
       } else {
