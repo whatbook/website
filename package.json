@@ -117,5 +117,12 @@
     "presets": [
       "react-app"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whatbook/website"
+  },
+  "bugs": {
+    "url": "https://github.com/whatbook/website/issues"
   }
 }
