@@ -2,11 +2,6 @@ import React, { Component } from 'react'
 import { TweenMax, Power2, Sine } from 'gsap/TweenMax'
 
 export default class Summary extends Component {
-  constructor(props) {
-    super(props)
-
-    
-  }
   componentDidMount() {
     /*
 Desc: Define inital variables
