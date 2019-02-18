@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
 import { TweenMax, Power2, Sine } from 'gsap/TweenMax'
+import { releases } from './data.tsx'
 
 export default class Summary extends Component {
-  constructor(props) {
-    super(props)
-
-    
-  }
   componentDidMount() {
     /*
 Desc: Define inital variables
 */
     var
       tagCtx,
+      versionCtx,
       tagWidth = window.innerWidth,
       tagHeight = window.innerHeight,
+      versionWidth = window.innerWidth,
+      versionHeight = window.innerHeight,
       numberOffsetX,
       numberOffsetY,
       stage,
@@ -37,170 +36,12 @@ Desc: Define inital variables
         '151, 211, 226',
       ],
       mostTagCount = 3
-    var releases = [
-      {
-        tag: '2018-4-26今天我们上线啦！',
-        version: '1.0.0',
-      },
-      {
-        tag: '修复一个小问题',
-        version: '1.0.1',
-      },
-      {
-        tag: '1.1.0 你没有用过的船新版本',
-        version: '1.1.0',
-      },
-      {
-        tag: '修复问题',
-        version: '1.1.1',
-      },
-      {
-        tag: '增加临时的图片旋转解决方案',
-        version: '1.1.2',
-      },
-      {
-        tag: '优化图片预览是显示图片速度',
-        version: '1.1.3',
-      },
-      {
-        tag: '1.2.0',
-        version: '1.2.0',
-      },
-      {
-        tag: '1.2.1',
-        version: '1.2.1',
-      },
-      {
-        tag: '1.2.2',
-        version: '1.2.2',
-      },
-      {
-        tag: '1.2.3',
-        version: '1.2.3',
-      },
-      {
-        tag: '1.2.4',
-        version: '1.2.4',
-      },
-      {
-        tag: '1.3.0',
-        version: '1.3.0',
-      },
-      {
-        tag: '1.3.1',
-        version: '1.3.1',
-      },
-      {
-        tag: '修复第一次编辑简要病史保存后不收起不回显的问题',
-        version: '1.3.2',
-      },
-      {
-        tag: '1.3.3',
-        version: '1.3.3',
-      },
-      {
-        tag: '抓紧！2.0发车了！',
-        version: '2.0.0',
-      },
-      {
-        tag: '2.1.0',
-        version: '2.1.0',
-      },
-      {
-        tag: '2.2.0',
-        version: '2.2.0',
-      },
-      {
-        tag: '2.2.1',
-        version: '2.2.1',
-      },
-      {
-        tag: '2.2.2',
-        version: '2.2.2',
-      },
-      {
-        tag: '2.2.3',
-        version: '2.2.3',
-      },
-      {
-        tag: '2.2.4',
-        version: '2.2.4',
-      },
-      {
-        tag: '2.3.0',
-        version: '2.3.0',
-      },
-      {
-        tag: '湘雅-2.4.0',
-        version: '2.4.0',
-      },
-      {
-        tag: '2.4.1',
-        version: '2.4.1',
-      },
-      {
-        tag: '2.5.0',
-        version: '2.5.0',
-      },
-      {
-        tag: '2.6.0',
-        version: '2.6.0',
-      },
-      {
-        tag: '2.7.0',
-        version: '2.7.0',
-      },
-      {
-        tag: '2.8.0',
-        version: '2.8.0',
-      },
-      {
-        tag: '2.8.1',
-        version: '2.8.1',
-      },
-      {
-        tag: '2.9.0',
-        version: '2.9.0',
-      },
-      {
-        tag: '2.9.1',
-        version: '2.9.1',
-      },
-      {
-        tag: '2.9.2',
-        version: '2.9.2',
-      },
-      {
-        tag: '2.9.3',
-        version: '2.9.3',
-      },
-      {
-        tag: '2.10.0',
-        version: '2.10.0',
-      },
-      {
-        tag: '2.11.0',
-        version: '2.11.0',
-      },
-      {
-        tag: '2.11.1',
-        version: '2.11.1',
-      },
-      {
-        tag: '2.11.2',
-        version: '2.11.2',
-      },
-      {
-        tag: 'Feture',
-        version: 'xx.xx.xx',
-      },
-    ]
 
     /*
 Desc: Init canvases & Number text
 */
     function init() {
-      initTags()
+      initReleases()
 
       // Init Stage which will have dots
       stage = document.getElementById('canvas-dots')
@@ -215,18 +56,20 @@ Desc: Init canvases & Number text
 
     init()
 
-    function initTags() {
-      function initTag(tagElement) {
+    function initReleases() {
+      function initRelease(index) {
         // Init stage which will have tags
         // Set the canvas to width and height of the window
+        const tagElement = document.querySelector(`#canvas-tag-${index}`)
+        const versionElement = document.querySelector(`#canvas-version-${index}`)
         tagElement.width = tagWidth // May be I can use tag char count to set every release of width here
         tagElement.height = tagHeight
+        versionElement.width = versionWidth // May be I can use tag char count to set every release of width here
+        versionElement.height = versionHeight
       }
       releases.forEach((release, index) => {
-        // const tagElement = createTagElement(index)
-        initTag(document.querySelector(`#canvas-tag-${index}`))
+        initRelease(index)
       })
-      // initTag(document.querySelector(`#canvas-tag-${renderFrom}`))
     }
 
     /*
@@ -240,7 +83,7 @@ Desc: Dot object
       _this.color = color
       _this.alpha = alpha
 
-      this.draw = function() {
+      this.draw = function () {
         stageCtx.beginPath()
         stageCtx.arc(_this.x, _this.y, circleRadius, 0, 2 * Math.PI, false)
         stageCtx.fillStyle = 'rgba(' + _this.color + ', ' + _this.alpha + ')'
@@ -275,7 +118,12 @@ Desc: render
       tagCtx = document
         .querySelector(`#canvas-tag-${renderFrom}`)
         .getContext('2d')
+      versionCtx = document
+        .querySelector(`#canvas-version-${renderFrom}`)
+        .getContext('2d')
       drawTag(releases[renderFrom].tag.toString())
+      drawVersion(releases[renderFrom].version.toString())
+      console.log('dots', dots.length, releases[renderFrom].tagDots, releases[renderFrom].versionDots.length)
 
       // When we hit zero stop render
       if (renderFrom + 1 === releases.length) {
@@ -284,6 +132,7 @@ Desc: render
       }
 
       // Decrement number down
+      console.log('renderForm', renderFrom)
       renderFrom++
     }
     render()
@@ -334,7 +183,7 @@ Desc: Draw number
       var imageData = ctx.getImageData(0, 0, tagWidth, tagHeight).data
 
       // Clear number coordinated
-      releases[renderFrom].numberPixelCoordinates = []
+      releases[renderFrom].tagDots = []
 
       // i is equal to total image data(eg: 480,000)
       // run while i is greater or equal to 0
@@ -360,12 +209,74 @@ Desc: Draw number
             (y && y % (circleRadius * 2 + 3) === 0)
           ) {
             // Push object to numberPixels array with x and y coordinates
-            releases[renderFrom].numberPixelCoordinates.push({ x: x, y: y })
+            releases[renderFrom].tagDots.push({ x: x, y: y })
           }
         }
       }
 
-      formNumber()
+      formNumber('tagDots')
+    }
+
+    function drawVersion(num) {
+      // Create a number on a seperate canvas
+      // Use a seperate canvas thats smaller so we have less data to loop over when using getImagedata()
+
+      //	Clear stage of previous versions
+      versionCtx.clearRect(0, 0, versionWidth, versionHeight)
+
+      versionCtx.fillStyle = '#24282f'
+      versionCtx.textAlign = 'left'
+      versionCtx.font = 'bold 68px Lato'
+      versionCtx.fillText(
+        num,
+        100,
+        ((versionHeight - 200) / mostTagCount) * ((renderFrom % 3) + 1) + 80
+      )
+
+      var ctx = document
+        .querySelector(`#canvas-version-${renderFrom}`)
+        .getContext('2d')
+
+      // getImageData(x, y, width, height)
+      // note: is an exspenisve function, so make sure canvas is small as possible for what you grab
+      // Returns 1 Dimensional array of pixel color value chanels
+      // Red, blue, green, alpha chanel of single pixel
+      // First chanel is red
+      var imageData = ctx.getImageData(0, 0, versionWidth, versionHeight).data
+
+      // Clear number coordinated
+      releases[renderFrom].versionDots = []
+
+      // i is equal to total image data(eg: 480,000)
+      // run while i is greater or equal to 0
+      // every time we run it minus 4 from i. Do this because each pixel has 4 chanels & we are only interested in individual pixels
+      for (var i = imageData.length; i >= 0; i -= 4) {
+        // If not an empty pixel
+        if (imageData[i] !== 0) {
+          // i represents the position in the array a red pixel was found
+
+          // (i / 4 ) and percentage by width of canvas
+          // Need to divide i by 4 because it has 4 values and you need its orginal position
+          // Then you need to percentage it by the width(600) because each row contains 600 pixels and you need its relative position in that row
+          var x = (i / 4) % tagWidth
+
+          // (i divide by width) then divide by 4
+          // Divide by width(600) first so you get the rows of pixels that make up the canvas. Then divide by 4 to get its postion within the row
+          var y = Math.floor(Math.floor(i / tagWidth) / 4)
+
+          // If position exists and number is divisble by circle plus a pixel gap then add cordinates to array. So circles do not overlap
+          if (
+            x &&
+            x % (circleRadius * 2 + 3) === 0 &&
+            (y && y % (circleRadius * 2 + 3) === 0)
+          ) {
+            // Push object to numberPixels array with x and y coordinates
+            releases[renderFrom].versionDots.push({ x: x, y: y })
+          }
+        }
+      }
+
+      formNumber('versionDots')
     }
 
     function getRenderTimer() {
@@ -378,38 +289,39 @@ Desc: Draw number
     /*
 Desc: Form number
 */
-    function formNumber() {
+    function formNumber(type) {
       for (
         var i = 0;
-        i < releases[renderFrom].numberPixelCoordinates.length;
+        i < releases[renderFrom][type].length;
         i++
       ) {
         // Loop out as many coordionates as we need & pass dots in to animate
-        tweenDots(dots[i], releases[renderFrom].numberPixelCoordinates[i], '')
+        tweenDots(dots[i], releases[renderFrom][type][i], '')
       }
 
       // Break number apart
       if (renderRunning && renderFrom + 1 !== releases.length) {
-        setTimeout(function() {
+        setTimeout(function () {
+          console.log('render', type)
           if (renderFrom % 3 === 0) {
             setTimeout(() => {
-              breakTag()
+              breakRelease(type)
             }, renderTimer + 500)
-          } else {
+          } else if (type === 'versionDots') {
             render()
           }
         }, getRenderTimer())
       }
     }
 
-    function breakTag() {
+    function breakRelease(type) {
       for (var i = dots.length - 1; i >= totalDotsCount; i--) {
-        tweenDots(dots[i], '', 'empty')
+        tweenDots(dots[i], '', 'empty', i)
       }
 
-      if (renderRunning) {
+      if (renderRunning && type === 'versionDots') {
         // Build next number
-        setTimeout(function() {
+        setTimeout(function () {
           render()
         }, breakTimer)
       }
@@ -418,7 +330,7 @@ Desc: Form number
     /*
 Desc: Animate dots
 */
-    function tweenDots(dot, pos, type) {
+    function tweenDots(dot, pos, type, index) {
       // Move dots around canvas randomly
       if (type === 'space') {
         // Tween dot to coordinate to form number
@@ -427,18 +339,18 @@ Desc: Animate dots
           y: randomNumber(0, stageHeight),
           alpha: 0.3,
           ease: Sine.easeOut,
-          onComplete: function() {
+          onComplete: function () {
             tweenDots(dot, '', 'space')
           },
         })
       } else if (type === 'empty') {
-        TweenMax.to(dot, 0.5 + Math.round(Math.random() * 100) / 100, {
+        TweenMax.to(dot, 1, {
           x: randomNumber(0, stageWidth),
           y: randomNumber(0, stageHeight),
           alpha: 0,
           ease: Sine.easeOut,
-          onComplete: function() {
-            // dots.pop()
+          onComplete: function () {
+            dots.splice(index, 1)
           },
         })
       } else {
@@ -460,7 +372,7 @@ Desc: Animate dots
           delay: 0,
           alpha: 1,
           ease: Power2.easeInOut,
-          onComplete: function() {},
+          onComplete: function () { },
         })
       }
     }
@@ -514,6 +426,45 @@ Desc: Get a random number
         <canvas id="canvas-tag-36" />
         <canvas id="canvas-tag-37" />
         <canvas id="canvas-tag-38" />
+        <canvas id="canvas-version-0" />
+        <canvas id="canvas-version-1" />
+        <canvas id="canvas-version-2" />
+        <canvas id="canvas-version-3" />
+        <canvas id="canvas-version-4" />
+        <canvas id="canvas-version-5" />
+        <canvas id="canvas-version-6" />
+        <canvas id="canvas-version-7" />
+        <canvas id="canvas-version-8" />
+        <canvas id="canvas-version-9" />
+        <canvas id="canvas-version-10" />
+        <canvas id="canvas-version-11" />
+        <canvas id="canvas-version-12" />
+        <canvas id="canvas-version-13" />
+        <canvas id="canvas-version-14" />
+        <canvas id="canvas-version-15" />
+        <canvas id="canvas-version-16" />
+        <canvas id="canvas-version-17" />
+        <canvas id="canvas-version-18" />
+        <canvas id="canvas-version-19" />
+        <canvas id="canvas-version-20" />
+        <canvas id="canvas-version-21" />
+        <canvas id="canvas-version-22" />
+        <canvas id="canvas-version-23" />
+        <canvas id="canvas-version-24" />
+        <canvas id="canvas-version-25" />
+        <canvas id="canvas-version-26" />
+        <canvas id="canvas-version-27" />
+        <canvas id="canvas-version-28" />
+        <canvas id="canvas-version-29" />
+        <canvas id="canvas-version-30" />
+        <canvas id="canvas-version-31" />
+        <canvas id="canvas-version-32" />
+        <canvas id="canvas-version-33" />
+        <canvas id="canvas-version-34" />
+        <canvas id="canvas-version-35" />
+        <canvas id="canvas-version-36" />
+        <canvas id="canvas-version-37" />
+        <canvas id="canvas-version-38" />
         <canvas id="canvas-version" />
         <canvas id="canvas-dots" />
       </div>
