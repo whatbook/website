@@ -1,389 +1,417 @@
 import React, { Component } from 'react'
 import { TweenMax, Power2, Sine } from 'gsap/TweenMax'
-import { releases } from './data.tsx'
+import { releases } from './data'
 
-export default class Summary extends Component {
-  componentDidMount() {
-    /*
-Desc: Define inital variables
-*/
-    var
-      tagCtx,
-      versionCtx,
-      tagWidth = window.innerWidth,
-      tagHeight = window.innerHeight,
-      versionWidth = window.innerWidth,
-      versionHeight = window.innerHeight,
-      numberOffsetX,
-      numberOffsetY,
-      stage,
-      stageCtx,
-      stageWidth = window.innerWidth,
-      stageHeight = window.innerHeight,
-      renderFrom = 0,
-      renderTimer = 1000,
-      // renderTimer = 100,
-      renderRunning = true,
-      breakTimer = 1000,
-      // breakTimer = 100,
-      totalDotsCount = 800,
-      dots = [],
-      circleRadius = 2,
-      colors = [
-        '61, 207, 236',
-        '255, 244, 174',
-        '255, 211, 218',
-        '151, 211, 226',
-      ],
-      mostTagCount = 3
-
-    /*
-Desc: Init canvases & Number text
-*/
-    function init() {
-      initReleases()
-
-      // Init Stage which will have dots
-      stage = document.getElementById('canvas-dots')
-      stageCtx = stage.getContext('2d')
-      stage.width = stageWidth
-      stage.height = stageHeight
-
-      // Create offset so text appears in middle of screen
-      numberOffsetX = (stageWidth - tagWidth) / 2
-      numberOffsetY = (stageHeight - tagHeight) / 2
-    }
-
-    init()
-
-    function initReleases() {
-      function initRelease(index) {
-        // Init stage which will have tags
-        // Set the canvas to width and height of the window
-        const tagElement = document.querySelector(`#canvas-tag-${index}`)
-        const versionElement = document.querySelector(`#canvas-version-${index}`)
-        tagElement.width = tagWidth // May be I can use tag char count to set every release of width here
-        tagElement.height = tagHeight
-        versionElement.width = versionWidth // May be I can use tag char count to set every release of width here
-        versionElement.height = versionHeight
-      }
-      releases.forEach((release, index) => {
-        initRelease(index)
-      })
-    }
-
-    /*
+/*
 Desc: Dot object
 */
-    function Dot(x, y, color, alpha) {
-      var _this = this
+class Dot {
+  x
+  y
+  color
+  alpha
+  draw
+  stageCtx
+  circleRadius
 
-      _this.x = x
-      _this.y = y
-      _this.color = color
-      _this.alpha = alpha
+  constructor(x, y, color, alpha, stageCtx, circleRadius) {
+    this.x = x
+    this.y = y
+    this.color = color
+    this.alpha = alpha
+    this.stageCtx = stageCtx
+    this.circleRadius = circleRadius
 
-      this.draw = function () {
-        stageCtx.beginPath()
-        stageCtx.arc(_this.x, _this.y, circleRadius, 0, 2 * Math.PI, false)
-        stageCtx.fillStyle = 'rgba(' + _this.color + ', ' + _this.alpha + ')'
-        stageCtx.fill()
-      }
+    this.draw = function () {
+      this.stageCtx.beginPath()
+      this.stageCtx.arc(this.x, this.y, this.circleRadius, 0, 2 * Math.PI, false)
+      this.stageCtx.fillStyle = 'rgba(' + this.color + ', ' + this.alpha + ')'
+      this.stageCtx.fill()
     }
+  }
+}
+export default class Summary extends Component {
+  color: string = ''
+  alpha: number = 0
+  x: number = 0
+  y: number = 0
+  tagCtx
+  versionCtx
+  tagWidth = window.innerWidth
+  tagHeight = window.innerHeight
+  versionWidth = window.innerWidth
+  versionHeight = window.innerHeight
+  numberOffsetX
+  numberOffsetY
+  stage
+  stageCtx
+  stageWidth = window.innerWidth
+  stageHeight = window.innerHeight
+  renderFrom = 0
+  renderTimer = 1000
+  // renderTimer = 100
+  renderRunning = true
+  breakTimer = 1000
+  // breakTimer = 100
+  totalDotsCount = 800
+  dots: (any)[] = []
+  circleRadius = 2
+  colors = [
+    '61, 207, 236',
+    '255, 244, 174',
+    '255, 211, 218',
+    '151, 211, 226',
+  ]
+  mostTagCount = 3
 
+  componentDidMount() {
     /*
-Desc: Create a certain amount of dots
-*/
-    for (var i = 0; i < totalDotsCount; i++) {
+  Desc: Define inital variables
+  */
+    this.init()
+    /*
+  Desc: Create a certain amount of dots
+  */
+    for (let i = 0; i < this.totalDotsCount; i++) {
       // Create a dot
-      var dot = new Dot(
-        randomNumber(0, stageWidth),
-        randomNumber(0, stageHeight),
-        colors[randomNumber(1, colors.length)],
-        0.3
+      let dot = new Dot(
+        this.randomNumber(0, this.stageWidth),
+        this.randomNumber(0, this.stageHeight),
+        this.colors[this.randomNumber(1, this.colors.length)],
+        0.3,
+        this.stageCtx,
+        this.circleRadius
       )
 
       // Push to into an array of dots
-      dots.push(dot)
+      this.dots.push(dot)
 
       // Animate dots
-      tweenDots(dot, '', 'space')
+      this.tweenDots(dot, '', 'space', null)
     }
 
-    /*
-Desc: render
-*/
-    function render() {
-      // Send number to be drawn
-      tagCtx = document
-        .querySelector(`#canvas-tag-${renderFrom}`)
-        .getContext('2d')
-      versionCtx = document
-        .querySelector(`#canvas-version-${renderFrom}`)
-        .getContext('2d')
-      drawTag(releases[renderFrom].tag.toString())
-      drawVersion(releases[renderFrom].version.toString())
-      console.log('dots', dots.length, releases[renderFrom].tagDots, releases[renderFrom].versionDots.length)
+    this.canvasRender()
 
-      // When we hit zero stop render
-      if (renderFrom + 1 === releases.length) {
-        renderRunning = false
-        // Now that renders finised show the text Go
-      }
+    this.loop()
+  }
 
-      // Decrement number down
-      console.log('renderForm', renderFrom)
-      renderFrom++
-    }
-    render()
-
-    /*
-Desc: Redraw loops
-*/
-    function loop() {
-      stageCtx.clearRect(0, 0, stageWidth, stageHeight)
-
-      for (var i = 0; i < dots.length; i++) {
-        dots[i].draw(stageCtx)
-      }
-
-      requestAnimationFrame(loop)
-    }
-
-    loop()
-
-    /*
-Desc: Draw number
-*/
-    function drawTag(num) {
-      // Create a number on a seperate canvas
-      // Use a seperate canvas thats smaller so we have less data to loop over when using getImagedata()
-
-      //	Clear stage of previous tags
-      tagCtx.clearRect(0, 0, tagWidth, tagHeight)
-
-      tagCtx.fillStyle = '#24282f'
-      tagCtx.textAlign = 'left'
-      tagCtx.font = 'bold 88px Lato'
-      tagCtx.fillText(
-        num,
-        100,
-        ((tagHeight - 200) / mostTagCount) * ((renderFrom % 3) + 1)
-      )
-
-      var ctx = document
-        .querySelector(`#canvas-tag-${renderFrom}`)
-        .getContext('2d')
-
-      // getImageData(x, y, width, height)
-      // note: is an exspenisve function, so make sure canvas is small as possible for what you grab
-      // Returns 1 Dimensional array of pixel color value chanels
-      // Red, blue, green, alpha chanel of single pixel
-      // First chanel is red
-      var imageData = ctx.getImageData(0, 0, tagWidth, tagHeight).data
-
-      // Clear number coordinated
-      releases[renderFrom].tagDots = []
-
-      // i is equal to total image data(eg: 480,000)
-      // run while i is greater or equal to 0
-      // every time we run it minus 4 from i. Do this because each pixel has 4 chanels & we are only interested in individual pixels
-      for (var i = imageData.length; i >= 0; i -= 4) {
-        // If not an empty pixel
-        if (imageData[i] !== 0) {
-          // i represents the position in the array a red pixel was found
-
-          // (i / 4 ) and percentage by width of canvas
-          // Need to divide i by 4 because it has 4 values and you need its orginal position
-          // Then you need to percentage it by the width(600) because each row contains 600 pixels and you need its relative position in that row
-          var x = (i / 4) % tagWidth
-
-          // (i divide by width) then divide by 4
-          // Divide by width(600) first so you get the rows of pixels that make up the canvas. Then divide by 4 to get its postion within the row
-          var y = Math.floor(Math.floor(i / tagWidth) / 4)
-
-          // If position exists and number is divisble by circle plus a pixel gap then add cordinates to array. So circles do not overlap
-          if (
-            x &&
-            x % (circleRadius * 2 + 3) === 0 &&
-            (y && y % (circleRadius * 2 + 3) === 0)
-          ) {
-            // Push object to numberPixels array with x and y coordinates
-            releases[renderFrom].tagDots.push({ x: x, y: y })
-          }
-        }
-      }
-
-      formNumber('tagDots')
-    }
-
-    function drawVersion(num) {
-      // Create a number on a seperate canvas
-      // Use a seperate canvas thats smaller so we have less data to loop over when using getImagedata()
-
-      //	Clear stage of previous versions
-      versionCtx.clearRect(0, 0, versionWidth, versionHeight)
-
-      versionCtx.fillStyle = '#24282f'
-      versionCtx.textAlign = 'left'
-      versionCtx.font = 'bold 68px Lato'
-      versionCtx.fillText(
-        num,
-        100,
-        ((versionHeight - 200) / mostTagCount) * ((renderFrom % 3) + 1) + 80
-      )
-
-      var ctx = document
-        .querySelector(`#canvas-version-${renderFrom}`)
-        .getContext('2d')
-
-      // getImageData(x, y, width, height)
-      // note: is an exspenisve function, so make sure canvas is small as possible for what you grab
-      // Returns 1 Dimensional array of pixel color value chanels
-      // Red, blue, green, alpha chanel of single pixel
-      // First chanel is red
-      var imageData = ctx.getImageData(0, 0, versionWidth, versionHeight).data
-
-      // Clear number coordinated
-      releases[renderFrom].versionDots = []
-
-      // i is equal to total image data(eg: 480,000)
-      // run while i is greater or equal to 0
-      // every time we run it minus 4 from i. Do this because each pixel has 4 chanels & we are only interested in individual pixels
-      for (var i = imageData.length; i >= 0; i -= 4) {
-        // If not an empty pixel
-        if (imageData[i] !== 0) {
-          // i represents the position in the array a red pixel was found
-
-          // (i / 4 ) and percentage by width of canvas
-          // Need to divide i by 4 because it has 4 values and you need its orginal position
-          // Then you need to percentage it by the width(600) because each row contains 600 pixels and you need its relative position in that row
-          var x = (i / 4) % tagWidth
-
-          // (i divide by width) then divide by 4
-          // Divide by width(600) first so you get the rows of pixels that make up the canvas. Then divide by 4 to get its postion within the row
-          var y = Math.floor(Math.floor(i / tagWidth) / 4)
-
-          // If position exists and number is divisble by circle plus a pixel gap then add cordinates to array. So circles do not overlap
-          if (
-            x &&
-            x % (circleRadius * 2 + 3) === 0 &&
-            (y && y % (circleRadius * 2 + 3) === 0)
-          ) {
-            // Push object to numberPixels array with x and y coordinates
-            releases[renderFrom].versionDots.push({ x: x, y: y })
-          }
-        }
-      }
-
-      formNumber('versionDots')
-    }
-
-    function getRenderTimer() {
-      // const tag = releases[renderFrom].tag
-      // const version = releases[renderFrom].version
-
-      // return tag === version ? 2500 : renderTimer
-      return renderTimer // 出现几个就break一次值需要renderTimer即可
-    }
-    /*
-Desc: Form number
-*/
-    function formNumber(type) {
-      for (
-        var i = 0;
-        i < releases[renderFrom][type].length;
-        i++
-      ) {
-        // Loop out as many coordionates as we need & pass dots in to animate
-        tweenDots(dots[i], releases[renderFrom][type][i], '')
-      }
-
-      // Break number apart
-      if (renderRunning && renderFrom + 1 !== releases.length) {
-        setTimeout(function () {
-          console.log('render', type)
-          if (renderFrom % 3 === 0) {
-            setTimeout(() => {
-              breakRelease(type)
-            }, renderTimer + 500)
-          } else if (type === 'versionDots') {
-            render()
-          }
-        }, getRenderTimer())
-      }
-    }
-
-    function breakRelease(type) {
-      for (var i = dots.length - 1; i >= totalDotsCount; i--) {
-        tweenDots(dots[i], '', 'empty', i)
-      }
-
-      if (renderRunning && type === 'versionDots') {
-        // Build next number
-        setTimeout(function () {
-          render()
-        }, breakTimer)
-      }
-    }
-
-    /*
+  /*
 Desc: Animate dots
 */
-    function tweenDots(dot, pos, type, index) {
-      // Move dots around canvas randomly
-      if (type === 'space') {
-        // Tween dot to coordinate to form number
-        TweenMax.to(dot, 3 + Math.round(Math.random() * 100) / 100, {
-          x: randomNumber(0, stageWidth),
-          y: randomNumber(0, stageHeight),
-          alpha: 0.3,
-          ease: Sine.easeOut,
-          onComplete: function () {
-            tweenDots(dot, '', 'space')
-          },
-        })
-      } else if (type === 'empty') {
-        TweenMax.to(dot, 1, {
-          x: randomNumber(0, stageWidth),
-          y: randomNumber(0, stageHeight),
-          alpha: 0,
-          ease: Sine.easeOut,
-          onComplete: function () {
-            dots.splice(index, 1)
-          },
-        })
-      } else {
-        // Tween dot to coordinate to form number
-        // const newDot = { ...dot }
-        // dots.push()
-        var newDot = new Dot(
-          randomNumber(0, stageWidth),
-          randomNumber(0, stageHeight),
-          colors[randomNumber(1, colors.length)],
-          0.3
-        )
+  tweenDots = (dot, pos, type, index) => {
+    // Move dots around canvas randomly
+    if (type === 'space') {
+      // Tween dot to coordinate to form number
+      TweenMax.to(dot, 3 + Math.round(Math.random() * 100) / 100, {
+        x: this.randomNumber(0, this.stageWidth),
+        y: this.randomNumber(0, this.stageHeight),
+        alpha: 0.3,
+        ease: Sine.easeOut,
+        onComplete: () => {
+          this.tweenDots(dot, '', 'space', null)
+        },
+      })
+    } else if (type === 'empty') {
+      TweenMax.to(dot, 1, {
+        x: this.randomNumber(0, this.stageWidth),
+        y: this.randomNumber(0, this.stageHeight),
+        alpha: 0,
+        ease: Sine.easeOut,
+        onComplete: () => {
+          this.dots.splice(index, 1)
+        },
+      })
+    } else {
+      // Tween dot to coordinate to form number
+      // const newDot = { ...dot }
+      // dots.push()
+      const newDot = new Dot(
+        this.randomNumber(0, this.stageWidth),
+        this.randomNumber(0, this.stageHeight),
+        this.colors[this.randomNumber(1, this.colors.length)],
+        0.3,
+        this.stageCtx,
+        this.circleRadius
+      )
 
-        // Push to into an array of dots
-        dots.push(newDot)
-        TweenMax.to(newDot, 1 + Math.round(Math.random() * 100) / 100, {
-          x: pos.x + numberOffsetX,
-          y: pos.y + numberOffsetY,
-          delay: 0,
-          alpha: 1,
-          ease: Power2.easeInOut,
-          onComplete: function () { },
-        })
+      // Push to into an array of dots
+      this.dots.push(newDot)
+      TweenMax.to(newDot, 1 + Math.round(Math.random() * 100) / 100, {
+        x: pos.x + this.numberOffsetX,
+        y: pos.y + this.numberOffsetY,
+        delay: 0,
+        alpha: 1,
+        ease: Power2.easeInOut,
+        onComplete: function () { },
+      })
+    }
+  }
+
+  /*
+  Desc: Init canvases & Number text
+  */
+  init = () => {
+    this.initReleases()
+
+    // Init Stage which will have dots
+    this.stage = document.getElementById('canvas-dots')
+    this.stageCtx = this.stage.getContext('2d')
+    this.stage.width = this.stageWidth
+    this.stage.height = this.stageHeight
+
+    // Create offset so text appears in middle of screen
+    this.numberOffsetX = (this.stageWidth - this.tagWidth) / 2
+    this.numberOffsetY = (this.stageHeight - this.tagHeight) / 2
+  }
+  initReleases = () => {
+    const initRelease = (index) => {
+      // Init stage which will have tags
+      // Set the canvas to width and height of the window
+      const tagElement: HTMLCanvasElement | null = document.querySelector(`#canvas-tag-${index}`)
+      const versionElement: HTMLCanvasElement | null = document.querySelector(`#canvas-version-${index}`)
+      if (tagElement && versionElement) {
+        let tagElement1: HTMLCanvasElement = tagElement
+        tagElement1.width = this.tagWidth // May be I can use tag char count to set every release of width here
+        tagElement1.height = this.tagHeight
+        versionElement.width = this.versionWidth // May be I can use tag char count to set every release of width here
+        versionElement.height = this.versionHeight
+      }
+    }
+    releases.forEach((release, index) => {
+      initRelease(index)
+    })
+  }
+
+  /*
+  Desc: Get a random number
+  */
+  randomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min) + min)
+  }
+
+  /*
+  Desc: render
+  */
+  canvasRender = () => {
+    // Send number to be drawn
+    const tagCanvas: HTMLCanvasElement | null = document.querySelector(`#canvas-tag-${this.renderFrom}`)
+    const versionCanvas: HTMLCanvasElement | null = document.querySelector(`#canvas-version-${this.renderFrom}`)
+
+    if (tagCanvas && versionCanvas) {
+      this.tagCtx = tagCanvas.getContext('2d')
+      this.versionCtx = versionCanvas.getContext('2d')
+    }
+
+    this.drawTag(releases[this.renderFrom].tag.toString())
+    this.drawVersion(releases[this.renderFrom].version.toString())
+    console.log('dots', this.dots.length, releases[this.renderFrom]['tagDots'].length, releases[this.renderFrom]['versionDots'])
+
+    // When we hit zero stop render
+    if (this.renderFrom + 1 === releases.length) {
+      this.renderRunning = false
+      // Now that renders finised show the text Go
+    }
+
+    // Decrement number down
+    console.log('renderForm', this.renderFrom)
+    this.renderFrom++
+  }
+
+  /*
+  Desc: Redraw loops
+  */
+  loop = () => {
+    this.stageCtx.clearRect(0, 0, this.stageWidth, this.stageHeight)
+
+    for (let i = 0; i < this.dots.length; i++) {
+      this.dots[i].draw(this.stageCtx)
+    }
+
+    requestAnimationFrame(this.loop)
+  }
+
+  /*
+  Desc: Draw number
+  */
+  drawTag = (num) => {
+    // Create a number on a seperate canvas
+    // Use a seperate canvas thats smaller so we have less data to loop over when using getImagedata()
+
+    //	Clear stage of previous tags
+    console.log(num)
+    this.tagCtx.clearRect(0, 0, this.tagWidth, this.tagHeight)
+
+    this.tagCtx.fillStyle = '#24282f'
+    this.tagCtx.textAlign = 'left'
+    this.tagCtx.font = 'bold 88px Lato'
+    console.log(((this.tagHeight - 200) / this.mostTagCount) * ((this.renderFrom % 3) + 1))
+    this.tagCtx.fillText(
+      num,
+      100,
+      ((this.tagHeight - 200) / this.mostTagCount) * ((this.renderFrom % 3) + 1)
+    )
+    console.log(this.renderFrom)
+    const canvas: HTMLCanvasElement | null = document.querySelector(`#canvas-tag-${this.renderFrom}`)
+    console.log(canvas)
+    let ctx
+    if (canvas) {
+      ctx = canvas.getContext('2d')
+    }
+
+    // getImageData(x, y, width, height)
+    // note: is an exspenisve const, so =  make sure canvas is small as possible for what you gra=> b
+    // Returns 1 Dimensional array of pixel color value chanels
+    // Red, blue, green, alpha chanel of single pixel
+    // First chanel is red
+    const imageData = ctx.getImageData(0, 0, this.tagWidth, this.tagHeight).data
+    // Clear number coordinated
+    releases[this.renderFrom]['tagDots'] = []
+    console.log(releases[0])
+    // i is equal to total image data(eg: 480,000)
+    // run while i is greater or equal to 0
+    // every time we run it minus 4 from i. Do this because each pixel has 4 chanels & we are only interested in individual pixels
+    for (let i = imageData.length; i >= 0; i -= 4) {
+
+      // If not an empty pixel
+      if (imageData[i] !== 0) {
+        // i represents the position in the array a red pixel was found
+
+        // (i / 4 ) and percentage by width of canvas
+        // Need to divide i by 4 because it has 4 values and you need its orginal position
+        // Then you need to percentage it by the width(600) because each row contains 600 pixels and you need its relative position in that row
+        const x = (i / 4) % this.tagWidth
+
+        // (i divide by width) then divide by 4
+        // Divide by width(600) first so you get the rows of pixels that make up the canvas. Then divide by 4 to get its postion within the row
+        const y = Math.floor(Math.floor(i / this.tagWidth) / 4)
+
+        // If position exists and number is divisble by circle plus a pixel gap then add cordinates to array. So circles do not overlap
+        if (
+          x &&
+          x % (this.circleRadius * 2 + 3) === 0 &&
+          (y && y % (this.circleRadius * 2 + 3) === 0)
+        ) {
+          // Push object to numberPixels array with x and y coordinates
+          releases[this.renderFrom]['tagDots'].push({ x: x, y: y })
+        }
       }
     }
 
-    /*
-Desc: Get a random number
-*/
-    function randomNumber(min, max) {
-      return Math.floor(Math.random() * (max - min) + min)
+    this.formNumber('tagDots')
+  }
+
+  drawVersion = (num) => {
+    // Create a number on a seperate canvas
+    // Use a seperate canvas thats smaller so we have less data to loop over when using getImagedata()
+
+    //	Clear stage of previous versions
+    this.versionCtx.clearRect(0, 0, this.versionWidth, this.versionHeight)
+
+    this.versionCtx.fillStyle = '#24282f'
+    this.versionCtx.textAlign = 'left'
+    this.versionCtx.font = 'bold 68px Lato'
+    this.versionCtx.fillText(
+      num,
+      100,
+      ((this.versionHeight - 200) / this.mostTagCount) * ((this.renderFrom % 3) + 1) + 80
+    )
+
+    const canvas: HTMLCanvasElement | null = document.querySelector(`#canvas-version-${this.renderFrom}`)
+    let ctx
+    if (canvas) {
+      ctx = canvas.getContext('2d')
+    }
+
+    // getImageData(x, y, width, height)
+    // note: is an exspenisve const, so =  make sure canvas is small as possible for what you gra=> b
+    // Returns 1 Dimensional array of pixel color value chanels
+    // Red, blue, green, alpha chanel of single pixel
+    // First chanel is red
+    const imageData = ctx.getImageData(0, 0, this.versionWidth, this.versionHeight).data
+
+    // Clear number coordinated
+    releases[this.renderFrom]['versionDots'] = []
+
+    // i is equal to total image data(eg: 480,000)
+    // run while i is greater or equal to 0
+    // every time we run it minus 4 from i. Do this because each pixel has 4 chanels & we are only interested in individual pixels
+    for (let i = imageData.length; i >= 0; i -= 4) {
+      // If not an empty pixel
+      if (imageData[i] !== 0) {
+        // i represents the position in the array a red pixel was found
+
+        // (i / 4 ) and percentage by width of canvas
+        // Need to divide i by 4 because it has 4 values and you need its orginal position
+        // Then you need to percentage it by the width(600) because each row contains 600 pixels and you need its relative position in that row
+        const x = (i / 4) % this.tagWidth
+
+        // (i divide by width) then divide by 4
+        // Divide by width(600) first so you get the rows of pixels that make up the canvas. Then divide by 4 to get its postion within the row
+        const y = Math.floor(Math.floor(i / this.tagWidth) / 4)
+
+        // If position exists and number is divisble by circle plus a pixel gap then add cordinates to array. So circles do not overlap
+        if (
+          x &&
+          x % (this.circleRadius * 2 + 3) === 0 &&
+          (y && y % (this.circleRadius * 2 + 3) === 0)
+        ) {
+          // Push object to numberPixels array with x and y coordinates
+          releases[this.renderFrom]['versionDots'].push({ x: x, y: y })
+        }
+      }
+    }
+
+    this.formNumber('versionDots')
+  }
+
+  getRenderTimer = () => {
+    // const tag = releases[renderFrom].tag
+    // const version = releases[renderFrom].version
+
+    // return tag === version ? 2500 : renderTimer
+    return this.renderTimer // 出现几个就break一次值需要renderTimer即可
+  }
+  /*
+  Desc: Form number
+  */
+  formNumber = (type) => {
+    for (
+      let i = 0;
+      i < releases[this.renderFrom][type].length;
+      i++
+    ) {
+      // Loop out as many coordionates as we need & pass dots in to animate
+      this.tweenDots(this.dots[i], releases[this.renderFrom][type][i], '', null)
+    }
+
+    // Break number apart
+    if (this.renderRunning && this.renderFrom + 1 !== releases.length) {
+      setTimeout(() => {
+        console.log('render', type)
+        if (this.renderFrom % 3 === 0) {
+          setTimeout(() => {
+            this.breakRelease(type)
+          }, this.renderTimer + 500)
+        } else if (type === 'versionDots') {
+          this.canvasRender()
+        }
+      }, this.getRenderTimer())
     }
   }
+
+  breakRelease = (type) => {
+    for (let i = this.dots.length - 1; i >= this.totalDotsCount; i--) {
+      this.tweenDots(this.dots[i], '', 'empty', i)
+    }
+
+    if (this.renderRunning && type === 'versionDots') {
+      // Build next number
+      setTimeout(() => {
+        this.canvasRender()
+      }, this.breakTimer)
+    }
+  }
+
   render() {
     return (
       <div id="canvas-wrap">
