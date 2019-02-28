@@ -2,19 +2,22 @@ import React, { Component } from 'react'
 import './config.js'
 import { CssBaseline } from '@material-ui/core'
 import AppBar from './app/components/AppBar';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import Collections from './app/pages/collections/Collections'
 
 export default class App extends Component {
   render() {
     return (
-      <div>
-        <CssBaseline />
-        <AppBar />
-        {/* <Button>
-          你好, 世界
-        </Button>
-        <Summary /> */}
+      <Router>
+        <div>
+          <CssBaseline />
+          <AppBar />
 
-      </div>
+          {/* <Summary /> */}
+          <Route path="/collections" component={Collections} />
+        </div>
+      </Router>
+
     )
   }
 }
