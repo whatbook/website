@@ -2,7 +2,7 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import { Link, Route } from 'react-router-dom'
 import styled from 'styled-components'
-import { withTheme } from '@material-ui/core/styles';
+import { withTheme } from '@material-ui/styles';
 
 const NavButton = (props: {
   label: string,

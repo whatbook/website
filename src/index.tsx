@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles'
 import purple from '@material-ui/core/colors/purple'
 import './index.css'
 import App from './App'
@@ -13,12 +14,12 @@ const theme = createMuiTheme({
     secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
   },
   typography: { useNextVariants: true },
-});
-
+})
+console.log(theme)
 ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
     <App />
-  </MuiThemeProvider>, document.getElementById('root'))
+  </ThemeProvider>, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
