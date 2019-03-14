@@ -1,10 +1,19 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import NavButton from './NavButton';
 import { makeStyles } from '@material-ui/styles';
+import styled, { ThemeProvider } from 'styled-components';
+import NoSsr from '@material-ui/core/NoSsr';
+import { createMuiTheme, Button } from '@material-ui/core'
+// import { unstable_Box as Box } from '@material-ui/core/Box';
+
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+})
 
 const styles = makeStyles((theme) => {
   console.log(theme);
@@ -34,23 +43,26 @@ const styles = makeStyles((theme) => {
 function ButtonAppBar() {
   const classes = styles()
   return (
-    <div className={classes.root}>
-      <AppBar color='default' position="static">
-        <Toolbar className={classes.spaceBetween}>
-          {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+    <NoSsr>
+      <ThemeProvider theme={theme}>
+        <div className={classes.root}>
+          <AppBar color='default' position="static">
+            <Toolbar className={classes.spaceBetween}>
+              {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
             <MenuIcon />
           </IconButton> */}
-          <Typography variant="h6" color="inherit" className={classes.uppercase}>
-            Whatbook
+              <Typography variant="h6" color="inherit" className={classes.uppercase}>
+                Whatbook
           </Typography>
-          <NavButton activeOnlyWhenExact={true} to='/collections' label='yy' />
-          <NavButton to='/xx' label='xx' />
+              <NavButton activeOnlyWhenExact={true} to='/collections' label='yy' />
+              <NavButton to='/xx' label='xx' />
 
-          <div className={classes.grow}></div>
-          {/* <Button color="primary">Login</Button> */}
-        </Toolbar>
-      </AppBar>
-    </div>
+              <div className={classes.grow}></div>
+            </Toolbar>
+          </AppBar>
+        </div>
+      </ThemeProvider>
+    </NoSsr >
   )
 }
 

@@ -12,31 +12,21 @@ const NavButton = (props: {
 }) => {
   const { label, to, activeOnlyWhenExact, theme } = props
   const StyledButton = styled(Button)`
+    color: ${() => theme.palette.primary.main};
     &&.active {
       font-size: 18px;
       font-weight: 600;
     }
-
-    a {
-      width: 100%;
-      height: 100%;
-      text-decoration: none;
-      color: ${() => theme.palette.primary.main};
-
-      &&:active {
-        color: inherit;
-      }
-    }
   `
-
   return (
     <Route
       path={to}
       exact={activeOnlyWhenExact}
-      children={({ match }) => {
+      children={({ match, history }) => {
         return (
-          <StyledButton className={match ? "active" : ""}>
-            <Link to={to}>{label}</Link>
+          <StyledButton onClick={() => history.push(to)} className={match ? "active" : ""}>
+            {/* <Link to={to}>{label}</Link> */}
+            {label}
           </StyledButton>
         )
       }}
