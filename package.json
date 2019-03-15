@@ -24,6 +24,7 @@
     "babel-jest": "23.6.0",
     "babel-loader": "8.0.5",
     "babel-plugin-named-asset-import": "^0.3.1",
+    "babel-plugin-require-context-hook": "^1.0.0",
     "babel-plugin-styled-components": "^1.10.0",
     "babel-preset-react-app": "^7.0.1",
     "bfj": "6.1.1",
@@ -68,6 +69,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-test-renderer": "^16.8.4",
+    "require-context.macro": "^1.0.4",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "standard": "^12.0.1",
@@ -138,7 +140,8 @@
     ],
     "resolver": "jest-pnp-resolver",
     "setupFiles": [
-      "react-app-polyfill/jsdom"
+      "react-app-polyfill/jsdom",
+      "<rootDir>/.jest/register-context.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -182,7 +185,8 @@
       "@babel/preset-typescript"
     ],
     "plugins": [
-      "babel-plugin-styled-components"
+      "babel-plugin-styled-components",
+      "require-context-hook"
     ]
   },
   "repository": {
