@@ -4,9 +4,9 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import NavButton from './NavButton';
 import { makeStyles } from '@material-ui/styles';
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import NoSsr from '@material-ui/core/NoSsr';
-import { createMuiTheme, Button } from '@material-ui/core'
+import { createMuiTheme } from '@material-ui/core'
 // import { unstable_Box as Box } from '@material-ui/core/Box';
 
 const theme = createMuiTheme({
@@ -54,8 +54,8 @@ function ButtonAppBar() {
               <Typography variant="h6" color="inherit" className={classes.uppercase}>
                 Whatbook
           </Typography>
-              <NavButton activeOnlyWhenExact={true} to='/collections' label='yy' />
-              <NavButton to='/xx' label='xx' />
+              <NavButton activeOnlyWhenExact={true} to='/collections' label='藏品' />
+              <NavButton to='/economics' label='经济' />
 
               <div className={classes.grow}></div>
             </Toolbar>
