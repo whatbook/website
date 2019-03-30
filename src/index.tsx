@@ -8,6 +8,7 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import 'app/utils/bootstrap'
 
+console.log('这里', process.env)
 const theme = createMuiTheme({
   palette: {
     primary: { main: '#5A2666' }, // Purple and green play nicely together.
