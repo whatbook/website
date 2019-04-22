@@ -3,13 +3,28 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh './gradlew check'
+                sh 'ls'
             }
         }
     }
     post {
         always {
-            junit 'build/reports/**/*.xml'
+            echo 'One way or another, I have finished'
+            deleteDir() /* clean up our workspace */
+        }
+        success {
+            slackSend channel: '#ci',
+                color: 'good',
+                message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'I failed :('
+        }
+        changed {
+            echo 'Things were different before...'
         }
     }
 }
