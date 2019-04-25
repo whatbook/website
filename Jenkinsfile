@@ -52,7 +52,7 @@ pipeline {
         }
         stage('Clean docker image') {
             when {
-                expression { env.BRANCH_NAME ==~ /(master|release|CI)/ }
+                expression { branch ==~ /(master|release|CI)/ }
             }
             steps {
                 sh "docker rmi ${env.registry}:${env.tag}"
