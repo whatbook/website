@@ -20,9 +20,10 @@ pipeline {
         }
         stage('Build Docker image') {
             when {
-                expression { env.BRANCH_NAME ==~ /(master|release|CI)/ }
+                expression { branch ==~ /(master|release|CI)/ }
             }
             steps {
+                echo env.BRANCH_NAME
                 script {
                     docker.withRegistry('https://cloud.docker.com/u/ako520/repository/docker/ako520/whatbook-website') {
                         def customImage = docker.build("${env.registry}:${env.tag}")
