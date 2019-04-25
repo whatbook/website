@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Build Docker image') {
             when {
-                expression { BRANCH_NAME ==~ /(master|release|CI)/ }
+                expression { env.BRANCH_NAME ==~ /(master|release|CI)/ }
             }
             steps {
                 script {
@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Clean docker image') {
             when {
-                expression { BRANCH_NAME ==~ /(master|release|CI)/ }
+                expression { env.BRANCH_NAME ==~ /(master|release|CI)/ }
             }
             steps {
                 sh "docker rmi ${env.registry}:${env.tag}"
