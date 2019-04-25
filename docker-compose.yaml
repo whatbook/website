@@ -1,0 +1,14 @@
+version: '3'
+services:
+  whatbook-website:
+    image:  ako520/whatbook-website:latest
+    container_name: whatbook-website
+    restart: always
+    volumes:
+    - /apps/whatbook-website/logs:/var/log/nginx
+    ports:
+    - 80:80
+    environment:
+      TZ: Asia/Shanghai
+    env_file:
+     - .env
