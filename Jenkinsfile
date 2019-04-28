@@ -14,11 +14,59 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'branch' + env.GIT_BRANCH
-                sh 'printenv'
                 slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
-                sh 'sh ./build.sh'
+                // sh 'sh ./build.sh'
             }
+        }
+        stage('Build Docker image') {
+            when {
+                expression { env.GIT_BRANCH ==~ /(master|release|CI)/ }
+            }
+            steps {
+                echo env.BRANCH_NAME
+                script {
+                    docker.withRegistry('https://cloud.docker.com/u/ako520/repository/docker/ako520/whatbook-website') {
+                        def customImage = docker.build("${env.registry}:${env.tag}")
+                        /* Push the container to the custom Registry */
+                        customImage.push("${env.tag}")
+                        customImage.push("latest")
+                    }
+                }
+            }
+        }
+        stage('Deploy - Test') {
+            when { branch 'CI' }
+            steps {
+                switchContainer(env.dev_server, env.project)
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying'
+            }
+        }
+        stage('Clean docker image') {
+            expression { env.GIT_BRANCH ==~ /(master|release|CI)/ }
+            steps {
+                sh "docker rmi ${env.registry}:${env.tag}"
+                sh "docker rmi ${env.registry}:latest"
+            }
+        }
+    }
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
+    post {
+        success {
+            slackSend(color: 'good', message: ":）${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Success. Take ${currentBuild.durationString.replace(' and counting', '')} <${env.RUN_DISPLAY_URL}|(Open)>")
+        }
+        failure {
+            slackSend(color: 'danger', message: ":( ${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Failed <${env.RUN_DISPLAY_URL}|(Open)>")
         }
     }
 }
