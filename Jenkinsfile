@@ -14,16 +14,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                expression { 
-                    print(env.GIT_BRANCH ==~ /(master|release|CI)/)
-                }
                 slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
                 // sh 'sh ./build.sh'
             }
         }
         stage('Build Docker image') {
             when {
-                expression { env.GIT_BRANCH ==~ /(master|release|CI)/ }
+                expression { env.GIT_BRANCH == 'origin/CI' }
             }
             steps {
                 script {
