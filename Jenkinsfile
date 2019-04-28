@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 expression { 
-                    echo env.GIT_BRANCH ==~ /(master|release|CI)/
+                    print(env.GIT_BRANCH ==~ /(master|release|CI)/)
                 }
                 slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
                 // sh 'sh ./build.sh'
