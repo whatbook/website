@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:8.10.0'
-            args '-p 3000:3000'
-        }
-    }
+    agent any
     environment {
         tag = env.GIT_COMMIT.substring(0, 8)
         registry = 'ako520/whatbook-website'
@@ -14,13 +9,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                slackSend(color: 'good', message: '${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>')
+                slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
                 sh 'sh ./build.sh'
             }
         }
         stage('Build Docker image') {
             when {
-                expression { branch ==~ /(master|release|CI)/ }
+                expression { env.BRANCH_NAME ==~ /(master|release|CI)/ }
             }
             steps {
                 echo env.BRANCH_NAME
@@ -52,7 +47,7 @@ pipeline {
         }
         stage('Clean docker image') {
             when {
-                expression { branch ==~ /(master|release|CI)/ }
+                expression { env.BRANCH_NAME ==~ /(master|release|CI)/ }
             }
             steps {
                 sh "docker rmi ${env.registry}:${env.tag}"
