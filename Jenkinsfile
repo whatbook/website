@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:8.10.0'
+            args '-p 3000:3000'
+        }
+    }
     environment {
         tag = env.GIT_COMMIT.substring(0, 8)
         registry = 'ako520/whatbook-website'
