@@ -23,7 +23,7 @@ pipeline {
             when {
                 expression { env.GIT_BRANCH == 'CI' }
             }
-            agent docker
+            agent any
             steps {
                 unstash 'build'
                 script {
