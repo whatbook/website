@@ -28,7 +28,6 @@ pipeline {
             }
             agent any
             steps {
-                unstash 'build'
                 script {
                     echo 'printenv'
                     echo env.GIT_BRANCH
