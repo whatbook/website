@@ -7,21 +7,6 @@ pipeline {
         project = 'whatbook-website'
     }
     stages {
-        // stage('Build') {
-        //     agent {
-        //         docker {
-        //             image 'node:8.10.0'
-        //         }
-        //     }·
-        //     steps {
-        //         slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
-        //         // sh 'sh ./build.sh'
-        //         sh 'mkdir ./build'
-        //         sh 'ls'
-        //         sh 'pwd'
-        //         // stash includes:'', name: 'build'
-        //     }·
-        // }
         stage('Build Docker image') {
             when {
                 expression { env.GIT_BRANCH == 'CI' }
