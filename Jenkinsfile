@@ -16,7 +16,7 @@ pipeline {
             steps {
                 slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
                 sh 'sh ./build.sh'
-                stash './build', name: 'build'
+                stash includes:'./build', name: 'build'
             }
         }
         stage('Build Docker image') {
