@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     environment {
         tag = env.GIT_COMMIT.substring(0, 8)
         registry = 'ako520/whatbook-website'
