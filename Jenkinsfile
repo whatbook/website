@@ -19,4 +19,5 @@ pipeline {
                 stash includes: '/build/', name: 'build' 
             }
         }
+    }
 }
