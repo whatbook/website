@@ -19,58 +19,6 @@ pipeline {
                 stash './build', name: 'build'
             }
         }
-        stage('Build Docker image') {
-            when {
-                expression { env.GIT_BRANCH == 'CI' }
-            }
-            agent docker
-            steps {
-                unstash 'build'
-                script {
-                    def customImage = docker.build("${env.registry}:${env.tag}")
-                    /* Push the container to the custom Registry */
-                    customImage.push("${env.tag}")
-                    customImage.push("latest")
-                }
-            }
-        }
-        stage('Deploy - Test') {
-            when { branch 'CI' }
-            steps {
-                agent docker
-                switchContainer(env.dev_server, env.project)
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying'
-            }
-        }
-        stage('Clean docker image') {
-            when {
-                expression { env.GIT_BRANCH ==~ /(master|release|CI)/ }
-            }
-            steps {
-                sh "docker rmi ${env.registry}:${env.tag}"
-                sh "docker rmi ${env.registry}:latest"
-            }
-        }
-    }
-    options {
-        timeout(time: 1, unit: 'HOURS')
-    }
-    post {
-        success {
-            slackSend(color: 'good', message: ":）${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Success. Take ${currentBuild.durationString.replace(' and counting', '')} <${env.RUN_DISPLAY_URL}|(Open)>")
-        }
-        failure {
-            slackSend(color: 'danger', message: ":( ${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Failed <${env.RUN_DISPLAY_URL}|(Open)>")
-        }
     }
 }
 
