@@ -16,6 +16,7 @@ pipeline {
             steps {
                 slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
                 // sh 'sh ./build.sh'
+                echo env.GIT_BRANCH
             }
         }
         stage('Build Docker image') {
