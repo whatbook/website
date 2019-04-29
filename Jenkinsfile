@@ -18,6 +18,7 @@ pipeline {
                 // sh 'sh ./build.sh'
                 sh 'mkdir ./build'
                 sh 'ls'
+                sh 'pwd'
                 stash includes:'build', name: 'build'
             }
         }
