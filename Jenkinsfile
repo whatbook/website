@@ -7,7 +7,7 @@ pipeline {
     }
     stages {
         stage('Build Docker image') {
-            angent any
+            agent any
             steps {
                 script {
                     def customImage = docker.build("${env.registry}:${env.tag}")
