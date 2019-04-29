@@ -15,7 +15,6 @@ pipeline {
             steps {
                 script {
                     echo 'printenv'
-                    echo ls
                     def customImage = docker.build("${env.registry}:${env.tag}")
                     /* Push the container to the custom Registry */
                     customImage.push("${env.tag}")
