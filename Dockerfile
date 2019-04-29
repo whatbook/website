@@ -1,4 +1,5 @@
 FROM node:8.10.0
+RUN ls
 RUN yarn \
   && yarn build
 FROM nginx
