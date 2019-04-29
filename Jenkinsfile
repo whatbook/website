@@ -27,12 +27,10 @@ pipeline {
                 script {
                     echo 'printenv'
                     echo env.GIT_BRANCH
-                    docker.withRegistry('https://cloud.docker.com/u/ako520/repository/docker/ako520/whatbook-website') {
-                        def customImage = docker.build("${env.registry}:${env.tag}")
-                        /* Push the container to the custom Registry */
-                        customImage.push("${env.tag}")
-                        customImage.push("latest")
-                    }
+                    def customImage = docker.build("${env.registry}:${env.tag}")
+                    /* Push the container to the custom Registry */
+                    customImage.push("${env.tag}")
+                    customImage.push("latest")
                 }
             }
         }
