@@ -12,7 +12,7 @@ pipeline {
         //         docker {
         //             image 'node:8.10.0'
         //         }
-        //     }
+        //     }·
         //     steps {
         //         slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
         //         // sh 'sh ./build.sh'
@@ -20,7 +20,7 @@ pipeline {
         //         sh 'ls'
         //         sh 'pwd'
         //         // stash includes:'', name: 'build'
-        //     }
+        //     }·
         // }
         stage('Build Docker image') {
             when {
