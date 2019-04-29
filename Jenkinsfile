@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Build Docker image') {
             when {
-                expression { env.GIT_BRANCH == 'origin/CI' }
+                expression { env.GIT_BRANCH == 'CI' }
             }
             steps {
                 script {
