@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:8.10.0'
-        }
-    }
+    agent none
     environment {
         tag = env.GIT_COMMIT.substring(0, 8)
         registry = 'ako520/whatbook-website'
@@ -12,17 +8,24 @@ pipeline {
     }
     stages {
         stage('Build') {
+            {
+                docker {
+                    image 'node:8.10.0'
+                }
+            }
             steps {
                 slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
                 sh 'sh ./build.sh'
-                echo env.GIT_BRANCH
+                stash './build', name: 'build'
             }
         }
         stage('Build Docker image') {
             when {
                 expression { env.GIT_BRANCH == 'CI' }
             }
+            agent docker
             steps {
+                unstash 'build'
                 script {
                     echo 'printenv'
                     echo env.GIT_BRANCH
@@ -36,6 +39,7 @@ pipeline {
         stage('Deploy - Test') {
             when { branch 'CI' }
             steps {
+                agent docker
                 switchContainer(env.dev_server, env.project)
             }
         }
