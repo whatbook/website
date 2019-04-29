@@ -27,8 +27,6 @@ pipeline {
             steps {
                 unstash 'build'
                 script {
-                    echo 'printenv'
-                    echo env.GIT_BRANCH
                     def customImage = docker.build("${env.registry}:${env.tag}")
                     /* Push the container to the custom Registry */
                     customImage.push("${env.tag}")
