@@ -19,7 +19,7 @@ pipeline {
                 sh 'mkdir ./build'
                 sh 'ls'
                 sh 'pwd'
-                stash includes:'build', name: 'build'
+                stash includes:'build/**/*', name: 'build'
             }
         }
         stage('Build Docker image') {
