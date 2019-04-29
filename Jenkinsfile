@@ -17,8 +17,10 @@ pipeline {
                 slackSend(color: 'good', message: "${env.JOB_NAME} - ${env.BUILD_DISPLAY_NAME} Started <${env.RUN_DISPLAY_URL}|(Open)>")
                 // sh 'sh ./build.sh'
                 sh 'mkdir ./build'
-                def customImage = docker.build("${env.registry}:${env.tag}")
                 sh 'ls'
+                script {
+                    def customImage = docker.build("${env.registry}:${env.tag}")
+                }
                 sh 'pwd'
                 // stash includes:'', name: 'build'
             }
