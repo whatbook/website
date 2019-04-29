@@ -18,7 +18,7 @@ pipeline {
                 // sh 'sh ./build.sh'
                 sh 'mkdir ./build'
                 sh 'ls'
-                stash includes:'./build', name: 'build'
+                stash includes:'build', name: 'build'
             }
         }
         stage('Build Docker image') {
