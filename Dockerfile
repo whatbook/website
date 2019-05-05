@@ -1,8 +1,8 @@
 FROM node:8.10.0 as nodejs
 WORKDIR /usr/src/app
-COPY . ./
-RUN ls /usr/src/app
+COPY package.json /usr/src/app
 RUN yarn
+COPY . ./
 RUN yarn build
 FROM nginx
 COPY --from=nodejs /usr/src/app/build /usr/share/nginx/html
