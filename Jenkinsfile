@@ -13,12 +13,12 @@ pipeline {
             }
             steps {
                 script {
-                    // docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         def customImage = docker.build("${env.registry}:${env.tag}")
                         /* Push the container to the custom Registry */
                         customImage.push("${env.tag}")
                         customImage.push("latest")
-                    // }
+                    }
                     
                 }
             }
