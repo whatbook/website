@@ -13,7 +13,7 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://cloud.docker.com/u/ako520/repository/docker/ako520/whatbook-website') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         def customImage = docker.build("${env.registry}:${env.tag}")
                         /* Push the container to the custom Registry */
                         customImage.push("${env.tag}")
