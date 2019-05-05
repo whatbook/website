@@ -11,10 +11,8 @@ pipeline {
             when {
                 expression { env.GIT_BRANCH == 'CI' }
             }
-            agent any
             steps {
                 script {
-                    echo 'printenv'
                     def customImage = docker.build("${env.registry}:${env.tag}")
                     /* Push the container to the custom Registry */
                     customImage.push("${env.tag}")
@@ -23,9 +21,10 @@ pipeline {
             }
         }
         stage('Deploy - Test') {
-            when { branch 'CI' }
+            // when { branch 'CI' }
             steps {
-                agent docker
+                echo branch
+                echo env.GIT_BRANCH
                 switchContainer(env.dev_server, env.project)
             }
         }
