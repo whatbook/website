@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
-import AppBar from '../components/AppBar';
+import { Route } from "react-router-dom";
+import Collections from '../pages/collections/Collections';
+import AppBar from './AppBar';
 
 class MainView extends Component {
   render() {
-    return <AppBar />
+    return (
+      <div>
+        <AppBar />
+        <Route path="/collections" component={Collections} />
+      </div>
+    )
   }
 }
 

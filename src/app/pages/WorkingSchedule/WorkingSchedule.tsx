@@ -1,10 +1,10 @@
 import { Alert, Badge, Calendar } from 'antd';
+import 'antd/dist/antd.css';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import './node_modules/antd/dist/antd.css';
-import './node_modules/moment/locale/zh-cn';
 
 moment.locale('zh-cn')
 
@@ -121,7 +121,7 @@ class workingSchedule extends Component {
 
     return (
       <div className="workingSchedule">
-        <h1>{selectedValue && selectedValue.format('YYYY-MM-DD')}</h1>
+        <h1 style={{ marginTop: '.5em' }}>{selectedValue && selectedValue.format('YYYY-MM-DD')}</h1>
         <Alert type='success' message={`${this.David}`} />
         <Alert type='warning' message={`${this.Hong}`} />
 
