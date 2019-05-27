@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import MainView from './app/components/MainView';
 import Collections from './app/pages/collections/Collections';
-import WorkingSchedule from './app/pages/WorkingSchedule/workingSchedule';
+import WorkingSchedule from './app/pages/X/workingSchedule';
 import './config.js';
 
 export default class App extends Component {

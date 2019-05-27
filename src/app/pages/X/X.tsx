@@ -1,10 +1,10 @@
-import { Alert, Badge, Calendar } from './node_modules/antd';
-import './node_modules/antd/dist/antd.css';
-import locale from './node_modules/antd/lib/date-picker/locale/zh_CN';
-import moment from './node_modules/moment';
-import './node_modules/moment/locale/zh-cn';
-import React, { Component } from './node_modules/react';
-import styled from './node_modules/styled-components';
+import { Alert, Badge, Calendar } from 'antd';
+import 'antd/dist/antd.css';
+import locale from 'antd/lib/date-picker/locale/zh_CN';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+import React, { Component } from 'react';
+import styled from 'styled-components';
 
 moment.locale('zh-cn')
 
