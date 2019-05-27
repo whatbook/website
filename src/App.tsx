@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
-import './config.js'
-import { CssBaseline } from '@material-ui/core'
-import AppBar from './app/components/AppBar';
-import { BrowserRouter as Router, Route } from "react-router-dom"
-import Collections from './app/pages/collections/Collections'
+import { CssBaseline } from '@material-ui/core';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import MainView from './app/components/MainView';
+import Collections from './app/pages/collections/Collections';
+import WorkingSchedule from './app/pages/WorkingSchedule/workingSchedule';
+import './config.js';
 
 export default class App extends Component {
   render() {
@@ -11,10 +12,10 @@ export default class App extends Component {
       <Router>
         <div>
           <CssBaseline />
-          <AppBar />
+          <MainView />
 
-          {/* <Summary /> */}
           <Route path="/collections" component={Collections} />
+          <Route path="/working-schedule" component={WorkingSchedule} />
         </div>
       </Router>
 
