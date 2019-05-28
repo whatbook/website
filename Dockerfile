@@ -1,7 +1,7 @@
 FROM node:8.10.0 as nodejs
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
-RUN yarn
+# RUN yarn
 COPY . ./
 # RUN yarn build
 RUN mkdir build
