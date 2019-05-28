@@ -3,7 +3,8 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 RUN yarn
 COPY . ./
-RUN yarn build
+# RUN yarn build
+RUN mkdir build
 FROM nginx
 COPY --from=nodejs /usr/src/app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
