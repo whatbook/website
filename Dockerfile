@@ -5,6 +5,7 @@ COPY package.json /usr/src/app
 COPY . ./
 # RUN yarn build
 RUN mkdir build
+RUN mkdir x
 FROM nginx
 COPY --from=nodejs /usr/src/app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
