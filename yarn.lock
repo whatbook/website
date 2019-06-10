@@ -1712,9 +1712,9 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/storybook__react@^4.0.1":
-  version "4.0.1"
-  resolved "http://registry.npm.taobao.org/@types/storybook__react/download/@types/storybook__react-4.0.1.tgz#b6320c9d027b8ee7ef1445fef8b4cba196d48ace"
+"@types/storybook__react@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/storybook__react/-/storybook__react-4.0.2.tgz#f36fb399574c662e79c1a0cf6e429b6ff730da40"
   dependencies:
     "@types/react" "*"
     "@types/webpack-env" "*"
