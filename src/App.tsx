@@ -5,7 +5,7 @@ import MainView from './app/components/MainView';
 import WorkingSchedule from './app/pages/WorkingSchedule/WorkingSchedule';
 import './config.js';
 export default class App extends Component {
-  render() {
+  render () {
     return (
       <Router>
         <div>
@@ -15,7 +15,6 @@ export default class App extends Component {
             <Route exact path="/working-schedule" component={WorkingSchedule} />
             <Route path="/" component={MainView} />
           </Switch>
-
         </div>
       </Router>
     )

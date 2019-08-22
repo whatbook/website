@@ -40,7 +40,7 @@ const styles = makeStyles((theme) => {
   })
 })
 
-function ButtonAppBar() {
+function ButtonAppBar () {
   const classes = styles()
   return (
     <NoSsr>
@@ -56,6 +56,7 @@ function ButtonAppBar() {
           </Typography>
               <NavButton activeOnlyWhenExact={true} to='/collections' label='藏品' />
               <NavButton to='/economics' label='经济' />
+              <NavButton to='/working-schedule' label='排班表' />
 
               <div className={classes.grow}></div>
             </Toolbar>
