@@ -23,14 +23,14 @@ pipeline {
                 }
             }
         }
-        stage('Deploy - Test') {
-            // when { branch 'CI' }
-            steps {
-                echo branch
-                echo env.GIT_BRANCH
-                switchContainer(env.dev_server, env.project)
-            }
-        }
+        // stage('Deploy - Test') {
+        //     // when { branch 'CI' }
+        //     steps {
+        //         echo branch
+        //         echo env.GIT_BRANCH
+        //         switchContainer(env.dev_server, env.project)
+        //     }
+        // }
         stage('Test') {
             steps {
                 echo 'Testing'
